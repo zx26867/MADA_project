@@ -8,10 +8,12 @@
 library(readxl) #for loading Excel files
 library(dplyr) #for data processing
 library(here) #to set paths
+library(stringr)
+library(ggplot2)
 
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("data","raw_data","exampledata.xlsx")
+data_location <- here::here("data","raw_data","jobs.xlsx")
 
 #load data. 
 #note that for functions that come from specific packages (instead of base R)
@@ -24,32 +26,54 @@ rawdata <- readxl::read_excel(data_location)
 #take a look at the data
 dplyr::glimpse(rawdata)
 
-#dataset is so small, we can print it to the screen.
-#that is often not possible.
-print(rawdata)
+# renaming all verbose column names
+rawdata = rename(rawdata,Age = `How old are you?`)
+rawdata = rename(rawdata,Job = `Job title`)
+rawdata = rename(rawdata,Salary = `Annual salary`)
+rawdata = rename(rawdata,YearsProExp = `Overall years of professional experience`)
+rawdata = rename(rawdata,YearsExp = `Years of experience in field`)
+rawdata = rename(rawdata,Education = `Highest level of education completed`)
 
-# looks like we have measurements for height (in centimeters) and weight (in kilogram)
+# select data column of interest
+selected_data = select(rawdata,c(Age,Industry,Job,Salary,Currency,Country,State,YearsProExp,YearsExp,Education,Gender,Race))
 
-# there are some problems with the data: 
-# There is an entry which says "sixty" instead of a number. 
-# Does that mean it should be a numeric 60? It somehow doesn't make
-# sense since the weight is 60kg, which can't happen for a 60cm person (a baby)
-# Since we don't know how to fix this, we need to remove the person.
-# This "sixty" entry also turned all Height entries into characters instead of numeric.
-# We need to fix that too.
-# Then there is one person with a height of 6. 
-# that could be a typo, or someone mistakenly entered their height in feet.
-# Since we unfortunately don't know, we'll have to remove this person.
-# similarly, there is a person with weight of 7000, which is impossible,
-# and one person with missing weight.
-# to be able to analyze the data, we'll remove those 5 individuals
+# We only interested in US data, so filter by country and currency
+processeddata <- selected_data %>% dplyr::filter( Country == "United States" ) %>% dplyr::filter( Currency == "USD" )
+                              
 
-# this is one way of doing it. Note that if the data gets updated, 
-# we need to decide if the thresholds are ok (newborns could be <50)
+dplyr::glimpse(processeddata)
 
-processeddata <- rawdata %>% dplyr::filter( Height != "sixty" ) %>% 
-                             dplyr::mutate(Height = as.numeric(Height)) %>% 
-                             dplyr::filter(Height > 50 & Weight < 1000)
+#check for #of groups and if there is any wierd entry
+ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
+# Age entries are divided into 7 groups 
+
+ggplot(processeddata, aes(x=Industry)) + geom_bar(fill = "black")
+# Industry entries are messy, need some string manipulation to downsize the number of groups
+
+summary(processeddata$Salary)
+# income range from 0 to 1650000, since salary = 0 is not reasonable, I should set a minimum value 10000
+processeddata = processeddata %>% dplyr::filter( Salary > 10000 )
+# make sure the filter worked
+summary(processeddata$Salary)
+
+# ensure the country and currency have only one entry
+ggplot(processeddata, aes(x=Country)) + geom_bar(fill = "black")
+ggplot(processeddata, aes(x=Currency)) + geom_bar(fill = "black")
+
+ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
+# checked the entries for YearsProExp, it is well divided into 8 non-overlapping categories
+
+ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
+# checked the entries for YearsExp, it is well divided into 8 non-overlapping categories
+
+ggplot(processeddata, aes(x=Education)) + geom_bar(fill = "black")
+# checked the entry for education, found 6 categories + an NA category
+
+ggplot(processeddata, aes(x=Race)) + geom_bar(fill = "black")
+# checked the entry for race, found data messy, need string manipulation
+
+ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
+# checked entry for gender, find 4 categories + an NA category
 
 # save data as RDS
 # I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 

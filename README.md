@@ -1,28 +1,27 @@
 # Overview
 
-The dataset I obtained is from kaggle. It is a chemical dataset of wines. The variables contain:
-0 - wine type
-1 - fixed acidity
-2 - volatile acidity
-3 - citric acid
-4 - residual sugar
-5 - chlorides
-6 - free sulfur dioxide
-7 - total sulfur dioxide
-8 - density
-9 - pH
-10 - sulphates
-11 - alcohol
+The dataset I obtained is about jobs and salaries. The dataset contains variables including:
+0 - age group
+1 - industry
+2 - job title
+3 - salary
+4 - country
+5 - state
+6 - years of professional experience
+7 - total years of experience
+8 - education level
+9 - gender
+10 - race
 
-1 - 11 are all numeric variables. The only categorical variable is the wine type: red/white. 
+Most variables are categorical variables. Some of them are ordinal, such as age group, years of experience, which are categorical in nature but also have comparative order. The only numeric data is the outcome of interest, which is salary.
 
 My Questions:
-1. Is it possible to predict the wine type based on these chemical levels?
-2. Given I have almost no concept about wine, with this dataset provided, am I able to tell the key chemicals that distinguish the red wine from the white wine?
+1. Is it possible to predict a job's salary based on these variables?
+2. What are the major determinants of a job's salary? Is there a good model summarizing the dataset?
 
 
 # Dataset Link
-https://www.kaggle.com/rajyellow46/wine-quality
+https://oscarbaruffa.com/messy/
 
 
 
