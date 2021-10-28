@@ -6,10 +6,11 @@
 
 #load needed packages. make sure they are installed.
 library(readxl) #for loading Excel files
-library(dplyr) #for data processing
+library(tidyverse) #for data processing
 library(here) #to set paths
 library(stringr)
 library(ggplot2)
+library(stringr)
 
 #path to data
 #note the use of the here() package and not absolute paths
@@ -39,7 +40,16 @@ selected_data = select(rawdata,c(Age,Industry,Job,Salary,Currency,Country,State,
 
 # We only interested in US data, so filter by country and currency
 processeddata <- selected_data %>% dplyr::filter( Country == "United States" ) %>% dplyr::filter( Currency == "USD" )
-                              
+
+# ensure the country and currency have only one entry
+ggplot(processeddata, aes(x=Country)) + geom_bar(fill = "black")
+ggplot(processeddata, aes(x=Currency)) + geom_bar(fill = "black")
+
+# remove rows with NA 
+processeddata = processeddata %>% drop_na()
+
+# now since currency and country only contains 1 outcome, delete them
+processeddata = processeddata %>% select(-c(Currency,Country))                              
 
 dplyr::glimpse(processeddata)
 
@@ -47,18 +57,42 @@ dplyr::glimpse(processeddata)
 ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
 # Age entries are divided into 7 groups 
 
-ggplot(processeddata, aes(x=Industry)) + geom_bar(fill = "black")
+ggplot(processeddata, aes(x=Job)) + geom_bar(fill = "black") + coord_flip()
+# Job entries are too messy to manipulate, it is impossible to organize/group them as there are too many variations
+# Therefore, Job title is dropped from the variable set
+processeddata = processeddata %>% select(-Job)
+
+p1 = ggplot(processeddata, aes(x=Industry)) + geom_bar(fill = "black") + coord_flip()
 # Industry entries are messy, need some string manipulation to downsize the number of groups
+p1
+#save figure
+figure_file1 = here("results","resultfigure1.png")
+ggsave(filename = figure_file1, plot=p1)
+
+indus = sort(table(processeddata$Industry),decreasing=TRUE)[1:20]
+# These are the top 20 Industry entries and I will only include rows with these entries. 
+# Other entries may be messy and may not contain enough data for modeling
+indus = as.data.frame(indus)
+s = ""
+for (x in indus$Var1){s = paste(s, x,sep = "|")}
+# print out the regex for copy-and-paste
+s  
+processeddata = processeddata %>% filter(grepl('^(Computing or Tech|Nonprofits|Education \\(Higher Education\\)|Health care|Accounting, Banking & Finance|Government and Public Administration|Engineering or Manufacturing|Marketing, Advertising & PR|Law|Business or Consulting|Media & Digital|Education \\(Primary\\/Secondary\\)|Insurance|Recruitment or HR|Retail|Art & Design|Property or Construction|Utilities & Telecommunications|Social Work|Transport or Logistics)$', Industry))
+
+# plot Industry variable again to see if it works
+p2 = ggplot(processeddata, aes(x=Industry)) + geom_bar(fill = "black") + coord_flip()
+# it has top 20 industry, which is good
+p2
+
+#save figure
+figure_file2 = here("results","resultfigure2.png")
+ggsave(filename = figure_file2, plot=p2)
 
 summary(processeddata$Salary)
 # income range from 0 to 1650000, since salary = 0 is not reasonable, I should set a minimum value 10000
 processeddata = processeddata %>% dplyr::filter( Salary > 10000 )
 # make sure the filter worked
 summary(processeddata$Salary)
-
-# ensure the country and currency have only one entry
-ggplot(processeddata, aes(x=Country)) + geom_bar(fill = "black")
-ggplot(processeddata, aes(x=Currency)) + geom_bar(fill = "black")
 
 ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
 # checked the entries for YearsProExp, it is well divided into 8 non-overlapping categories
@@ -67,13 +101,15 @@ ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
 # checked the entries for YearsExp, it is well divided into 8 non-overlapping categories
 
 ggplot(processeddata, aes(x=Education)) + geom_bar(fill = "black")
-# checked the entry for education, found 6 categories + an NA category
+# checked the entry for education, found 6 categories
 
-ggplot(processeddata, aes(x=Race)) + geom_bar(fill = "black")
+ggplot(processeddata, aes(x=Race)) + geom_bar(fill = "black") + coord_flip()
 # checked the entry for race, found data messy, need string manipulation
+# The plot shows over 95% of entry is white. Therefore this variable does not contain much variation and should be dropped.
+processeddata = processeddata %>% select(-Race)
 
 ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
-# checked entry for gender, find 4 categories + an NA category
+# checked entry for gender, find 4 categories
 
 # save data as RDS
 # I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
