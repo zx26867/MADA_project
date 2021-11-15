@@ -55,7 +55,9 @@ dplyr::glimpse(processeddata)
 
 #check for #of groups and if there is any wierd entry
 ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
-# Age entries are divided into 7 groups 
+# Age entries are divided into 7 groups, remove 2 groups with almost no datapoints
+processeddata <- processeddata %>% dplyr::filter( Age != "65 or over" ) %>% dplyr::filter( Age != "under 18" )
+ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
 
 ggplot(processeddata, aes(x=Job)) + geom_bar(fill = "black") + coord_flip()
 # Job entries are too messy to manipulate, it is impossible to organize/group them as there are too many variations
@@ -88,6 +90,18 @@ p2
 figure_file2 = here("results","resultfigure2.png")
 ggsave(filename = figure_file2, plot=p2)
 
+p3 = ggplot(processeddata, aes(x=State)) + geom_bar(fill = "black") + coord_flip()
+p3
+# State column contains messy entry too, we will select data from 50 states
+figure_file3 = here("results","resultfigure3.png")
+ggsave(filename = figure_file3, plot=p3)
+
+processeddata = processeddata %>% filter(grepl('^(AL|Alabama|AK|Alaska|AZ|Arizona|AR|Arkansas|CA|California|CO|Colorado|CT|Connecticut|DE|Delaware|FL|Florida|GA|Georgia|HI|Hawaii|ID|Idaho|IL|Illinois|IN|Indiana|IA|Iowa|KS|Kansas|KY|Kentucky|LA|Louisiana|ME|Maine|MD|Maryland|MA|Massachusetts|MI|Michigan|MN|Minnesota|MS|Mississippi|MO|Missouri|MT|Montana|NE|Nebraska|NV|Nevada|NH|New Hampshire|NJ|New Jersey|NM|New Mexico|NY|New York|NC|North Carolina|ND|North Dakota|OH|Ohio|OK|Oklahoma|OR|Oregon|PA|Pennsylvania|RI|Rhode Island|SC|South Carolina|SD|South Dakota|TN|Tennessee|TX|Texas|UT|Utah|VT|Vermont|VA|Virginia|WA|Washington|WV|West Virginia|WI|Wisconsin|WY|Wyoming)$', State))
+p4 = ggplot(processeddata, aes(x=State)) + geom_bar(fill = "black") + coord_flip()
+p4
+figure_file4 = here("results","resultfigure4.png")
+ggsave(filename = figure_file4, plot=p4)
+
 summary(processeddata$Salary)
 # income range from 0 to 1650000, since salary = 0 is not reasonable, I should set a minimum value 10000
 processeddata = processeddata %>% dplyr::filter( Salary > 10000 )
@@ -95,10 +109,14 @@ processeddata = processeddata %>% dplyr::filter( Salary > 10000 )
 summary(processeddata$Salary)
 
 ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
-# checked the entries for YearsProExp, it is well divided into 8 non-overlapping categories
+# checked the entries for YearsProExp, it is well divided into 8 non-overlapping categories, remove a group with little data
+processeddata <- processeddata %>% dplyr::filter( YearsProExp != "41 years or more" ) 
+ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
 
 ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
-# checked the entries for YearsExp, it is well divided into 8 non-overlapping categories
+# checked the entries for YearsExp, it is well divided into 8 non-overlapping categories, remove a group with little data
+processeddata <- processeddata %>% dplyr::filter( YearsExp != "41 years or more" ) 
+ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
 
 ggplot(processeddata, aes(x=Education)) + geom_bar(fill = "black")
 # checked the entry for education, found 6 categories
@@ -110,6 +128,8 @@ processeddata = processeddata %>% select(-Race)
 
 ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
 # checked entry for gender, find 4 categories
+processeddata <- processeddata %>% dplyr::filter( Gender != "Other or prefer not to answer" ) 
+ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
 
 # save data as RDS
 # I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
