@@ -39,7 +39,7 @@ rawdata = rename(rawdata,Education = `Highest level of education completed`)
 selected_data = select(rawdata,c(Age,Industry,Job,Salary,Currency,Country,State,YearsProExp,YearsExp,Education,Gender,Race))
 
 # We only interested in US data, so filter by country and currency
-processeddata <- selected_data %>% dplyr::filter( Country == "United States" ) %>% dplyr::filter( Currency == "USD" )
+processeddata <- selected_data %>% dplyr::filter(tolower(Country) == "united states" | tolower(Country) == "usa" | tolower(Country) == "us" ) %>% dplyr::filter( tolower(Currency) == "usd" )
 
 # ensure the country and currency have only one entry
 ggplot(processeddata, aes(x=Country)) + geom_bar(fill = "black")

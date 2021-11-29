@@ -37,11 +37,13 @@ mydata$Education = mydata$Education %>% factor(order = TRUE, levels = c("High Sc
 # This enables the analysis to be reproducible when random numbers are used 
 set.seed(111)
 # Put 3/4 of the data into the training set
-data_split <- initial_split(mydata, prop = 3/4)
+data_split <- initial_split(mydata, prop = 3/4,strata = State)
 
 # Create data frames for the two sets:
 train_data <- training(data_split)
 test_data  <- testing(data_split)
+
+################## linear model  #################
 
 all_prdtr_rec <- recipe(Salary ~ ., data = train_data) 
 single_prdtr_rec <- recipe(Salary ~ Education, data = train_data)
@@ -57,10 +59,10 @@ single_fit <-
   single_workflow %>% 
   fit(data = train_data)
 
-# make some predictions on test data
-predict(single_fit, test_data)
+# make some predictions on training data
+predict(single_fit, train_data)
 
-salary_predict_single <- augment(single_fit, test_data)
+salary_predict_single <- augment(single_fit, train_data)
 salary_predict_single %>% select(Salary,.pred)
 
 #evaluate rmse to see how good it fits the data
@@ -77,27 +79,57 @@ all_fit <-
   all_workflow %>% 
   fit(data = train_data)
 
-# make some predictions on test data
-predict(all_fit, test_data)
+# make some predictions on training data
+predict(all_fit, train_data)
 
-salary_predict_all <- augment(all_fit, test_data)
+salary_predict_all <- augment(all_fit, train_data)
 salary_predict_all %>% select(Salary,.pred)
 
 #evaluate rmse to see how good it fits the data
 salary_predict_all %>% rmse(truth = Salary, .pred)
 
-# Null model: use mean to predict everything
+
+df_lm <- all_fit %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
+df_lm$id <- seq.int(nrow(df_lm))
+
+p1=ggplot() + geom_point(data = df_lm, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_lm, aes(x = id, y = .pred), color = "red")
+# blue curve is the actual, red curve is predicted
+
+p2=ggplot(df_lm, aes(x = id, y = residue)) + geom_point()
+# residue plots
+
+figure_file1 = here("results","lm1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","lm2.png")
+ggsave(filename = figure_file2, plot=p2)
+
+
+############### Null model: use mean to predict everything  #################
 pred_by_mean = salary_predict_all
 pred_by_mean$.pred = mean(pred_by_mean$Salary)
 pred_by_mean %>% rmse(truth = Salary, .pred)
 # rmse for null model > single predictor model > all predictor model
 
+df_null <- pred_by_mean %>% mutate(residue = Salary - .pred)
+df_null$id <- seq.int(nrow(df_null))
+p1=ggplot() + geom_point(data = df_null, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_null, aes(x = id, y = .pred), color = "red")
+# blue curve is the actual, red curve is predicted
+
+p2=ggplot(df_null, aes(x = id, y = residue)) + geom_point()
+# residue plots
+
+figure_file1 = here("results","null1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","null2.png")
+ggsave(filename = figure_file2, plot=p2)
+
+############# cross validation ##################
 set.seed(111)
 folds <- vfold_cv(train_data, v = 5, repeats = 5, strata = Salary)
 #
 folds
 
-# receipe for model with all predictors
+########## receipe for model with all predictors ####################
 data_rec <- recipe(Salary ~ ., data = train_data) %>% step_dummy(all_nominal())
 
 ################## decision tree model  #################
@@ -145,14 +177,20 @@ final_fit <- final_wf %>% fit(train_data)
 
 df_tr <- final_fit %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
 df_tr$id <- seq.int(nrow(df_tr))
-ggplot() + geom_point(data = df_tr, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_tr, aes(x = id, y = .pred), color = "red") 
+p1 = ggplot() + geom_point(data = df_tr, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_tr, aes(x = id, y = .pred), color = "red") 
 # blue curve is the actual, red curve is predicted
 
-ggplot(df_tr, aes(x = id, y = residue)) + geom_point()
-# residue plots
+p2 = ggplot(df_tr, aes(x = id, y = residue)) + geom_point()
+# residue plotsΩ
 
 a = a %>% filter(.metric=="rmse") %>% arrange(mean)
 a
+
+figure_file1 = here("results","decision_tree1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","decision_tree2.png")
+ggsave(filename = figure_file2, plot=p2)
+
 
 ################ random forest model ###############
 cores <- parallel::detectCores()
@@ -191,14 +229,20 @@ final_fit_rf <- final_wf_rf %>% fit(train_data)
 
 df_rf <- final_fit_rf %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
 df_rf$id <- seq.int(nrow(df_rf))
-ggplot() + geom_point(data = df_rf, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_rf, aes(x = id, y = .pred), color = "red")
+p1=ggplot() + geom_point(data = df_rf, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_rf, aes(x = id, y = .pred), color = "red")
 # blue curve is the actual, red curve is predicted
 
-ggplot(df_rf, aes(x = id, y = residue)) + geom_point()
+p2=ggplot(df_rf, aes(x = id, y = residue)) + geom_point()
 # residue plots
 
 c = c %>% filter(.metric=="rmse") %>% arrange(mean)
 c
+
+figure_file1 = here("results","rf1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","rf2.png")
+ggsave(filename = figure_file2, plot=p2)
+
 
 ################## SVM Model ################
 
@@ -244,14 +288,20 @@ final_fit_svm <- final_wf_svm %>% fit(train_data)
 
 df_svm <- final_fit_svm %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
 df_svm$id <- seq.int(nrow(df_svm))
-ggplot() + geom_point(data = df_svm, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_svm, aes(x = id, y = .pred), color = "red")
+p1=ggplot() + geom_point(data = df_svm, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_svm, aes(x = id, y = .pred), color = "red")
 # blue curve is the actual, red curve is predicted
 
-ggplot(df_svm, aes(x = id, y = residue)) + geom_point()
+p2=ggplot(df_svm, aes(x = id, y = residue)) + geom_point()
 # residue plots
 
 d = d %>% filter(.metric=="rmse") %>% arrange(mean)
 d
+
+
+figure_file1 = here("results","svm1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","svm2.png")
+ggsave(filename = figure_file2, plot=p2)
 
 ################# knn model ####################
 knn_recipe <- data_rec %>% step_scale(all_predictors()) %>% step_center(all_predictors())
@@ -278,14 +328,19 @@ final_fit_knn <- final_wf_knn %>% fit(train_data)
 
 df_knn <- final_fit_knn %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
 df_knn$id <- seq.int(nrow(df_knn))
-ggplot() + geom_point(data = df_knn, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_knn, aes(x = id, y = .pred), color = "red")
+p1=ggplot() + geom_point(data = df_knn, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_knn, aes(x = id, y = .pred), color = "red")
 # blue curve is the actual, red curve is predicted
 
-ggplot(df_knn, aes(x = id, y = residue)) + geom_point()
+p2=ggplot(df_knn, aes(x = id, y = residue)) + geom_point()
 # residue plots
 
 e = e %>% filter(.metric=="rmse") %>% arrange(mean)
 e
+
+figure_file1 = here("results","knn1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","knn2.png")
+ggsave(filename = figure_file2, plot=p2)
 
 ############# LASSO model ##############
 
@@ -315,14 +370,36 @@ final_fit_lr <- final_wf_lr %>% fit(train_data)
 
 df_lr <- final_fit_lr %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
 df_lr$id <- seq.int(nrow(df_lr))
-ggplot() + geom_point(data = df_lr, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_lr, aes(x = id, y = .pred), color = "red")
+p1=ggplot() + geom_point(data = df_lr, aes(x = id, y = Salary), color = "blue") + geom_point(data = df_lr, aes(x = id, y = .pred), color = "red")
 # blue curve is the actual, red curve is predicted
 
-ggplot(df_lr, aes(x = id, y = residue)) + geom_point()
+p2=ggplot(df_lr, aes(x = id, y = residue)) + geom_point()
 # residue plots
 
 b = b %>% filter(.metric=="rmse") %>% arrange(mean)
 b
+
+figure_file1 = here("results","lasso1.png")
+ggsave(filename = figure_file1, plot=p1)
+figure_file2= here("results","lasso2.png")
+ggsave(filename = figure_file2, plot=p2)
+
+
+############ final fit ###########
+
+# since the best model is linear model with all factors, performing final_fit on test data using that model
+salary_predict_final <- augment(all_fit, test_data)
+salary_predict_final %>% select(Salary,.pred)
+
+#evaluate rmse to see how good it fits the data
+salary_predict_final %>% rmse(truth = Salary, .pred)
+# final best model rmse is 49852
+
+# null model fitting on testing data:
+pred_by_mean_final = salary_predict_final
+pred_by_mean_final$.pred = mean(pred_by_mean_final$Salary)
+pred_by_mean_final %>% rmse(truth = Salary, .pred)
+# final null model rmse is 59556
 
 #save data frame table to file for later use in manuscript
 #summarytable_file = here("results", "summarytable.rds")
