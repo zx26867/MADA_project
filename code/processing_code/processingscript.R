@@ -42,8 +42,18 @@ selected_data = select(rawdata,c(Age,Industry,Job,Salary,Currency,Country,State,
 processeddata <- selected_data %>% dplyr::filter(tolower(Country) == "united states" | tolower(Country) == "usa" | tolower(Country) == "us" ) %>% dplyr::filter( tolower(Currency) == "usd" )
 
 # ensure the country and currency have only one entry
-ggplot(processeddata, aes(x=Country)) + geom_bar(fill = "black")
-ggplot(processeddata, aes(x=Currency)) + geom_bar(fill = "black")
+p5 = ggplot(processeddata, aes(x=Country)) + geom_bar(fill = "black") + coord_flip()
+p5
+#save figure
+figure_file5 = here("results","resultfigure5.png")
+ggsave(filename = figure_file5, plot=p5)
+
+
+p6 = ggplot(processeddata, aes(x=Currency)) + geom_bar(fill = "black")
+p6
+#save figure
+figure_file6 = here("results","resultfigure6.png")
+ggsave(filename = figure_file6, plot=p6)
 
 # remove rows with NA 
 processeddata = processeddata %>% drop_na()
@@ -54,12 +64,21 @@ processeddata = processeddata %>% select(-c(Currency,Country))
 dplyr::glimpse(processeddata)
 
 #check for #of groups and if there is any wierd entry
-ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
+p7 = ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
+p7
+figure_file7 = here("results","resultfigure7.png")
+ggsave(filename = figure_file7, plot=p7)
 # Age entries are divided into 7 groups, remove 2 groups with almost no datapoints
 processeddata <- processeddata %>% dplyr::filter( Age != "65 or over" ) %>% dplyr::filter( Age != "under 18" )
-ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
+p8 = ggplot(processeddata, aes(x=Age)) + geom_bar(fill = "black")
+p8
+figure_file8 = here("results","resultfigure8.png")
+ggsave(filename = figure_file8, plot=p8)
 
-ggplot(processeddata, aes(x=Job)) + geom_bar(fill = "black") + coord_flip()
+p9 = ggplot(processeddata, aes(x=Job)) + geom_bar(fill = "black") + coord_flip()
+p9
+figure_file9 = here("results","resultfigure9.png")
+ggsave(filename = figure_file9, plot=p9)
 # Job entries are too messy to manipulate, it is impossible to organize/group them as there are too many variations
 # Therefore, Job title is dropped from the variable set
 processeddata = processeddata %>% select(-Job)
@@ -108,28 +127,52 @@ processeddata = processeddata %>% dplyr::filter( Salary > 10000 )
 # make sure the filter worked
 summary(processeddata$Salary)
 
-ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
+p10 = ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
+p10
+figure_file10 = here("results","resultfigure10.png")
+ggsave(filename = figure_file10, plot=p10)
 # checked the entries for YearsProExp, it is well divided into 8 non-overlapping categories, remove a group with little data
 processeddata <- processeddata %>% dplyr::filter( YearsProExp != "41 years or more" ) 
-ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
+p11 = ggplot(processeddata, aes(x=YearsProExp)) + geom_bar(fill = "black")
+p11
+figure_file11 = here("results","resultfigure11.png")
+ggsave(filename = figure_file11, plot=p11)
 
-ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
+p12=ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
+p12
+figure_file12 = here("results","resultfigure12.png")
+ggsave(filename = figure_file12, plot=p12)
 # checked the entries for YearsExp, it is well divided into 8 non-overlapping categories, remove a group with little data
 processeddata <- processeddata %>% dplyr::filter( YearsExp != "41 years or more" ) 
-ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
+p13=ggplot(processeddata, aes(x=YearsExp)) + geom_bar(fill = "black")
+p13
+figure_file13 = here("results","resultfigure13.png")
+ggsave(filename = figure_file13, plot=p13)
 
-ggplot(processeddata, aes(x=Education)) + geom_bar(fill = "black")
+p14=ggplot(processeddata, aes(x=Education)) + geom_bar(fill = "black")
+p14
 # checked the entry for education, found 6 categories
+figure_file14 = here("results","resultfigure14.png")
+ggsave(filename = figure_file14, plot=p14)
 
-ggplot(processeddata, aes(x=Race)) + geom_bar(fill = "black") + coord_flip()
+p15=ggplot(processeddata, aes(x=Race)) + geom_bar(fill = "black") + coord_flip()
+p15
+figure_file15 = here("results","resultfigure15.png")
+ggsave(filename = figure_file15, plot=p15)
 # checked the entry for race, found data messy, need string manipulation
 # The plot shows over 95% of entry is white. Therefore this variable does not contain much variation and should be dropped.
 processeddata = processeddata %>% select(-Race)
 
-ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
+p16=ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
+p16
+figure_file16 = here("results","resultfigure16.png")
+ggsave(filename = figure_file16, plot=p16)
 # checked entry for gender, find 4 categories
 processeddata <- processeddata %>% dplyr::filter( Gender != "Other or prefer not to answer" ) 
-ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
+p17=ggplot(processeddata, aes(x=Gender)) + geom_bar(fill = "black")
+p17
+figure_file17 = here("results","resultfigure17.png")
+ggsave(filename = figure_file17, plot=p17)
 
 # save data as RDS
 # I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
