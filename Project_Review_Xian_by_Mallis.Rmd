@@ -1,0 +1,186 @@
+# Overview
+
+Title of project: Machine Learning Model Comparison for American Salary Prediction
+
+Name of project author(s): Zhihan Xian
+
+Name of project reviewer: Nicholas Mallis
+
+
+# Specific project content evaluation
+Evaluate the different parts of the project by filling in the sections below.
+
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+I would suggest finding a few more sources to add to the background section. I assume there's another study that looks at some of this stuff. I just assume Dr. Handel would want to see at least one cited published study instead of a top 5 list from a website. 
+
+### Summary assessment 
+* some contextualization and motivation
+
+
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+
+### Feedback and Comments
+
+The question is fully explained, but I'm a little confused about it. For some reason, when I started reading this, I assumed you were going to explore which factors are most important in deciding salary. Maybe you end up doing that (I haven't gotten that far yet), but it states that your main goal is to compare ML models, but I think the main goal could maybe be what I mentioned above. We want to learn something first and foremost. Whichever model we use should be talked about, but we're in this for the information (I think). There are a lot of methods papers like this so take this with a grain of salt.
+
+I would also suggest writing out your question in full question form. It's sort of an incomplete thought the way it reads now. Maybe add a "Do machine learning models perform...."
+
+### Summary assessment
+* question/hypotheses fully clear
+
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+"It is a real-world messy dataset with 26,782 observations and 17 variables before cleaning up."
+
+I would delete the real-world messy part and stick with the information on the observations and variables.
+
+The data import and cleaning part was helpful to read, but I would move it up with the data description. I think it might make more sense to have that stuff before the modeling. I feel like it's usually seen like this...
+
+Description of Data
+
+Descriptive Analysis
+
+Modeling
+
+There are of course several ways to do it, but I think that the way you have has a little too much jumping around.
+
+All this being said, you explain your steps in great detail and I can tell you did quite a bit of wrangling. 
+
+### Summary assessment
+* source and overall structure of data well explained
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+In the analysis script, you can definitely see that the data was explored in detail. My only suggestion would be to add another descriptive plot or  even a table to your main text which summarizes the dataset. You could use the table1 package and get something pretty quick.
+
+### Summary assessment
+* essentially no weaknesses in wrangling and exploratory component
+
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+I'm impressed that you tackled so many different methods to answer your question! There isn't a discussion of why you used each method so maybe you want to add some motivation. And going back to what I mentioned earlier, maybe you want to discuss more about which variables you found to be most important.
+
+### Summary assessment
+* strong and reasonable analysis
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+
+I think a lot of your results in the middle of the manuscript could be moved to the supplement. I mainly say this because that was the advice Dr. Handel gave me after seeing that I had put a lot of my diagnostic plots in the main text. 
+
+I would also suggest providing a summary table that gives the reader an idea of what's going on with the data.
+
+Great job the main plot though! Maybe put in another one similar to it? 
+
+And like I've said before, I would love to hear more about the importance of different variables.
+
+
+### Summary assessment
+* results are presented ok, with room for improvement
+
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+You discuss your findings well and point out some flaws in the data that need to be addressed, but the same critique as before stands with the reader not knowing which variables you found that predict your outcome. 
+
+### Summary assessment
+* minor parts wrong, missing or unclear
+
+
+## Further comments
+
+_Add any other comments regarding the different aspects of the project here. Write anything you think can help your classmate improve their project._
+
+
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+While the main manuscript could use some work with structure, the project folders themselves are well laid out and organized.
+
+My only suggestion for this would be to update the README files. Some of them still contain information from the template provided.
+
+### Summary assessment
+* well structured
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+As I said before, my only suggestion for this would be to update the README files. Some of them still contain information from the template provided. Other than that, things are well documented in the scripts/RMDs.
+
+Another recommendation would be to add more documentation to your supplemental
+
+### Summary assessment
+* fully and well documented
+
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+Your processing script ran great, but I can't get your analysis script to finish running. This is probably a computing power issue so I don't think you should have anything to worry about here with reproducibility. I left it running for about 4 hours and it still hadn't finished. I assume it will run fine on a higher powered machine, though.
+
+### Summary assessment
+* small parts not reproducible or required manual intervention 
+
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+I would say that the analysis is very thorough and that you answered your hypothesis. I was really impressed with all the different models that your ran and compared, but with regard to answering questions about the data, I think a little bit more work needs to be done. As I said before, I suggest talking more about the results and variables that were important. I think you probably have all of the information there to form this, but you just need to document and write about it. I want to learn what the model says is the most important in making the money $ 
+
+### Summary assessment
+* decent level of thoroughness
+
+
+
+## Further comments
+
+_Add any other comments regarding the overall project here. Write anything you think can help your classmate improve their project._
+
+
+
+
+

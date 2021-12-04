@@ -1,0 +1,213 @@
+---
+title: Project Review Template 
+date: "`r file.mtime(knitr::current_input())`"
+#bibliography: ../media/references.bib
+output: 
+  html_document:
+    toc_depth: 3
+    number_sections: true
+---
+
+# Overview
+
+Title of project: "Machine Learning Model Comparison for American Salary Prediction"
+
+Name of project author(s): Zhihan Xian
+
+Name of project reviewer: Monica Chan
+
+
+# Instructions
+
+Write your comments and feedback below for each section/component of the project. The goal should be to help the author improve their project. Make comments as constructive and actionable as possible. You can provide both criticism and praise.
+
+For each component, pick one summary statement by deleting the ones that do not apply and keeping only the one that you think most closely summarizes a given component. 
+
+Make sure your final document compiles/knits into a readable, well-formatted html document.
+
+Delete any sections/text of this template that are not part of your final review document. (Including these instructions.)
+
+
+# Specific project content evaluation
+Evaluate the different parts of the project by filling in the sections below.
+
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+Very clear explanation of what the data is and the plans for the use of the data.
+Poses a concern that is relevant to everyone and draws interest from general readers, not just specific readers.
+
+### Summary assessment (PICK ONE, DELETE THE OTHERS)
+
+* strong contextualization and motivation
+
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+
+### Feedback and Comments
+
+Question and hypotheses are clear. Although the Introduction does mention comparing different machine learning models for best performance-- perhaps that can be added as a detail to section 2.1.
+
+Perhaps something like we perform an exploratory analysis to determine the best machine learning modesls that can predict salary?
+
+### Summary assessment
+
+* question/hypotheses fully clear
+
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+Codebook and data source is available in the readme.
+At first glance I wasn't able to determine where the data is from, but it was rolled into the Methods and Results. Perhaps make further subsections. I think the analysis figures are great, but should not be before the data description section.
+Not necessary yet could help with clarity.
+
+
+### Summary assessment
+
+* source and overall structure of data somewhat explained
+
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+I'm not sure HOW much we should discuss on what changes were done to the data for sufficient explanation of data wrangling.
+
+The author clearly states types the data as categorical or ordinal and explains how the data will likely be processed.
+The 2nd paragraph in the 3rd section could added to subsection for "data wrangling and exploration".
+
+The order of section throws me off.
+
+section content could have parts included more in the data and source section.
+
+### Summary assessment
+
+* some weaknesses in wrangling and exploratory component
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+This one was difficult to assess.
+I think the explanation and comparison is correct for what is written as the question of this project.
+
+### Summary assessment
+
+* strong and reasonable analysis
+
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+I like the use of figures and that there are so many of them.
+If you could do side by sides and separate (possible additional sub headers) to split up the continuous train of images in the manuscript. 
+Some figures I feel are not be as important and could be put as a supplement.
+There are some aspects that may need to 
+
+### Summary assessment
+
+* results are presented ok, with room for improvement
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+I think the discussion could be elaborated more, but that might just be due to how I was taught to "respond" to the figures answers.
+Maybe a bit of explanation on why the linear model is favored in addition to being simple or explain a scenario where the choice would change
+
+### Summary assessment
+
+* strong, complete and clear discussion
+
+
+## Further comments
+
+_Add any other comments regarding the different aspects of the project here. Write anything you think can help your classmate improve their project._
+
+I think it would be stronger to adjust the project question to compare the models results. This would need a graphic of sorts that could compare the different results of the entries for the variable industry.-- like a facet or just side by side output comparison by model.
+
+Some paper structure changes would help the flow. But your goal and use of the methods are all in there.
+Not that it matters, but I do think some graphic would be neat to see about comparing your models in addition to listing out the stats in the paper.
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+There are some unused parts in the file structure.
+I have had much issues with this in my own project, This can be quickly solved by adding an Archived folder.
+There are a number of residual files from the template remaining. 
+
+### Summary assessment
+
+* mostly clear, but some confusing parts (e.g. useless files, things in the wrong folders)
+
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+Enough to get the idea of what is happening that I can understand with my base knowledge.
+
+### Summary assessment
+
+* decently documented with some gaps
+
+
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+Was able to run with no errors. And recommendation on time running analysis script could be added to a read.me as a warning.
+
+
+### Summary assessment
+ 
+* fully reproducible without issues
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+The alternatives could be elaborated on, but the manuscript already mentions that this is a limited study.
+
+
+### Summary assessment
+
+* decent level of thoroughness
+
+
+## Further comments
+
+_Add any other comments regarding the overall project here. Write anything you think can help your classmate improve their project._
+
+I know that a lot of my comment ranking is the mid level, but I was mostly between the mid and strong levels in reviewing.
+
+I think by adjusting the project question to be able to compare the models results could strengthen the report.
