@@ -17,7 +17,7 @@ Most variables are categorical variables. Some of them are ordinal, such as age 
 
 My Questions:
 1. Is it possible to predict a job's salary based on these variables?
-2. What are the major determinants of a job's salary? Is there a good model summarizing the dataset?
+2. Which model results in the best performance in terms of RMSE?
 
 
 # Dataset Link
