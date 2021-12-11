@@ -88,7 +88,6 @@ salary_predict_all %>% select(Salary,.pred)
 #evaluate rmse to see how good it fits the data
 salary_predict_all %>% rmse(truth = Salary, .pred)
 
-
 df_lm <- all_fit %>% augment(train_data) %>% select(.pred, Salary) %>% mutate(residue = Salary - .pred)
 df_lm$id <- seq.int(nrow(df_lm))
 
