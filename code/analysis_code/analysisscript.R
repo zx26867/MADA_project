@@ -392,13 +392,13 @@ salary_predict_final %>% select(Salary,.pred)
 
 #evaluate rmse to see how good it fits the data
 salary_predict_final %>% rmse(truth = Salary, .pred)
-# final best model rmse is 49852
+# final best model rmse is 46934
 
 # null model fitting on testing data:
 pred_by_mean_final = salary_predict_final
 pred_by_mean_final$.pred = mean(pred_by_mean_final$Salary)
 pred_by_mean_final %>% rmse(truth = Salary, .pred)
-# final null model rmse is 59556
+# final null model rmse is 57219
 
 #save data frame table to file for later use in manuscript
 #summarytable_file = here("results", "summarytable.rds")
